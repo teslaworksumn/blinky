@@ -57,7 +57,7 @@ void TIMER2_IRQHandler(void)
 int main(void) {
 
 	// TODO: insert code here
-	uint32_t timerFreq;
+	uint32_t timerFreq = 1;
 
 	Board_Init();
 

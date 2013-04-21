@@ -30,7 +30,7 @@
  */
 
 #ifdef __USE_CMSIS
-#include "LPC177x_8x.h"
+//#include "LPC177x_8x.h"
 #endif
 
 #include <cr_section_macros.h>

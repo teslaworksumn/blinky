@@ -115,6 +115,10 @@ void TIMER2_IRQHandler(void)
     }
 }
 
+extern "C" {
+void SystemInit(void);
+}
+
 /**
  * @brief	main routine for blinky example
  * @return	Function should not exit.
@@ -123,6 +127,7 @@ int main(void)
 {
     uint32_t timerFreq;
     
+    SystemInit();
     Board_Init();
     
     DEBUGSTR("Blinky example using timers 1 and 2!\r\n");

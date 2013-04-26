@@ -30,7 +30,7 @@
  */
 
 #ifdef __USE_CMSIS
-//#include "LPC177x_8x.h"
+#include "LPC177x_8x.h"
 #endif
 
 #include <cr_section_macros.h>
@@ -39,7 +39,7 @@
 // Variable to store CRP value in. Will be placed automatically
 // by the linker when "Enable Code Read Protect" selected.
 // See crp.h header for more information
-__CRP extern const unsigned int CRP_WORD = CRP_NO_CRP;
+__CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 
 #include "board.h"
 #include <stdio.h>
@@ -56,6 +56,8 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP;
  *
  * <b>Build procedures:</b><br>
  * @ref LPCOPEN_17XX40XX_BUILDPROCS_KEIL<br>
+ * @ref LPCOPEN_17XX40XX_BUILDPROCS_IAR<br>
+ * @ref LPCOPEN_17XX40XX_BUILDPROCS_XPRESSO<br>
  *
  * <b>Supported boards and board setup:</b><br>
  * @ref LPCOPEN_17XX40XX_BOARD_EA1788<br>
@@ -70,8 +72,8 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP;
  * Private types/enumerations/variables
  ****************************************************************************/
 
-#define TICKRATE1_HZ 10
-#define TICKRATE2_HZ 7
+#define TICKRATE1_HZ 20
+#define TICKRATE2_HZ 10
 
 /*****************************************************************************
  * Public types/enumerations/variables
@@ -85,91 +87,97 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP;
  * Public functions
  ****************************************************************************/
 
+#if defined (__cplusplus)
+extern "C" {
+#endif
 /**
- * @brief	Handle interrupt from 32-bit timer 1
- * @return	Nothing
+ * @brief   Handle interrupt from 32-bit timer 1
+ * @return  Nothing
  */
 void TIMER1_IRQHandler(void)
 {
     static bool On = false;
-    
+
     if (Chip_TIMER_MatchPending(LPC_TIMER1, 1)) {
         Chip_TIMER_ClearMatch(LPC_TIMER1, 1);
-        On = (bool)!On;
+        On = (bool) !On;
         Board_LED_Set(0, On);
     }
 }
 
 /**
- * @brief	Handle interrupt from 32-bit timer 2
- * @return	Nothing
+ * @brief   Handle interrupt from 32-bit timer 2
+ * @return  Nothing
  */
 void TIMER2_IRQHandler(void)
 {
     static bool On = false;
-    
+
     if (Chip_TIMER_MatchPending(LPC_TIMER2, 1)) {
         Chip_TIMER_ClearMatch(LPC_TIMER2, 1);
-        On = (bool)!On;
+        On = (bool) !On;
         Board_LED_Set(1, On);
     }
 }
-
-extern "C" {
-void SystemInit(void);
-}
+#if defined (__cplusplus)
+} // extern "C"
+#endif
 
 /**
- * @brief	main routine for blinky example
- * @return	Function should not exit.
+ * @brief   main routine for blinky example
+ * @return  Function should not exit.
  */
 int main(void)
 {
     uint32_t timerFreq;
-    
-    SystemInit();
+
     Board_Init();
-    
+
     DEBUGSTR("Blinky example using timers 1 and 2!\r\n");
-    
+
     /* Enable timer 1 clock and get clock rate */
-    Chip_TIMER_Init(LPC_TIMER1 );
-    timerFreq = Chip_SYSCON_GetPCLKRateFromClk(SYSCON_CLK_TIMER1);
-    
-    Chip_TIMER_Reset(LPC_TIMER1 );
+    Chip_TIMER_Init(LPC_TIMER1);
+#if defined(CHIP_LPC175X_6X)
+    timerFreq = Chip_Clock_GetPeripheralClockRate(SYSCTL_PCLK_TIMER1);
+#else
+    timerFreq = Chip_Clock_GetPeripheralClockRate();
+#endif
+
+    Chip_TIMER_Reset(LPC_TIMER1);
     Chip_TIMER_MatchEnableInt(LPC_TIMER1, 1);
     Chip_TIMER_SetMatch(LPC_TIMER1, 1, (timerFreq / TICKRATE1_HZ));
     Chip_TIMER_ResetOnMatchEnable(LPC_TIMER1, 1);
-    Chip_TIMER_Enable(LPC_TIMER1 );
-    
+    Chip_TIMER_Enable(LPC_TIMER1);
+
     /* Enable timer interrupt */
-//    NVIC_EnableIRQ(TIMER1_IRQn);
-//    NVIC_ClearPendingIRQ(TIMER1_IRQn);
-    
+    NVIC_EnableIRQ(TIMER1_IRQn);
+    NVIC_ClearPendingIRQ(TIMER1_IRQn);
+
     DEBUGOUT("Timer 1 clock     = %d Hz\r\n", timerFreq);
     DEBUGOUT("Timer 1 tick rate = %d Hz\r\n", TICKRATE1_HZ);
-    
+
     /* Enable timer 2 clock and get clock rate */
-    Chip_TIMER_Init(LPC_TIMER2 );
-    timerFreq = Chip_SYSCON_GetPCLKRateFromClk(SYSCON_CLK_TIMER2);
-    
-    Chip_TIMER_Reset(LPC_TIMER2 );
+    Chip_TIMER_Init(LPC_TIMER2);
+#if defined(CHIP_LPC175X_6X)
+    timerFreq = Chip_Clock_GetPeripheralClockRate(SYSCTL_PCLK_TIMER2);
+#else
+    timerFreq = Chip_Clock_GetPeripheralClockRate();
+#endif
+
+    Chip_TIMER_Reset(LPC_TIMER2);
     Chip_TIMER_MatchEnableInt(LPC_TIMER2, 1);
     Chip_TIMER_SetMatch(LPC_TIMER2, 1, (timerFreq / TICKRATE2_HZ));
     Chip_TIMER_ResetOnMatchEnable(LPC_TIMER2, 1);
-    Chip_TIMER_Enable(LPC_TIMER2 );
-    
+    Chip_TIMER_Enable(LPC_TIMER2);
+
     /* Enable timer interrupt */
     NVIC_EnableIRQ(TIMER2_IRQn);
     NVIC_ClearPendingIRQ(TIMER2_IRQn);
-    
+
     DEBUGOUT("Timer 2 clock     = %d Hz\r\n", timerFreq);
     DEBUGOUT("Timer 2 tick rate = %d Hz\r\n", TICKRATE2_HZ);
-    
+
     while (1) {
         __WFI();
     }
-
-    TIMER1_IRQHandler();
-    TIMER2_IRQHandler();
 }

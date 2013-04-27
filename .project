@@ -3,6 +3,7 @@
 	<name>blinky</name>
 	<comment></comment>
 	<projects>
+		<project>cortex-vortex</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

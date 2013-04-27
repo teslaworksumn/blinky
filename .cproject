@@ -100,7 +100,7 @@
 									<listOptionValue builtIn="false" value="cortex-vortex"/>
 								</option>
 								<option id="gnu.cpp.link.option.paths.1815385447" name="Library search path (-L)" superClass="gnu.cpp.link.option.paths" valueType="libPaths">
-									<listOptionValue builtIn="false" value="/Users/Trimble/Documents/.Red_Suite_5_5.0.14/workspace/cortex-vortex/Debug"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/cortex-vortex/Debug}&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.836801190" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 									<additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>

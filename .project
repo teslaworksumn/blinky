@@ -25,10 +25,4 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
-	<variableList>
-		<variable>
-			<name>LPC_LOC</name>
-			<value>file:/lpcopen</value>
-		</variable>
-	</variableList>
 </projectDescription>

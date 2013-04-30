@@ -72,16 +72,7 @@
 								<option id="com.crt.advproject.gas.thumb.1995150191" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" value="true" valueType="boolean"/>
 								<option id="gnu.both.asm.option.flags.crt.1714185744" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__ -DDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.1273934693" name="Use headers for C library" superClass="com.crt.advproject.gas.hdrlib" value="com.crt.advproject.gas.hdrlib.newlib" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.include.paths.1220036142" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/board_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/CMSIS/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_ip&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_chip/chip_17xx_40xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_chip/chip_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/board_common&quot;"/>
-								</option>
+								<option id="gnu.both.asm.option.include.paths.1220036142" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1194269684" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1652086843" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 							</tool>
@@ -189,16 +180,7 @@
 								<option id="com.crt.advproject.gas.thumb.889348037" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" value="true" valueType="boolean"/>
 								<option id="gnu.both.asm.option.flags.crt.1914238776" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__ -DNDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.1239980125" name="Use headers for C library" superClass="com.crt.advproject.gas.hdrlib" value="com.crt.advproject.gas.hdrlib.newlib" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.include.paths.583912195" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/board_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/CMSIS/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_ip&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_chip/chip_17xx_40xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_LOC}/software/lpc_core/lpc_chip/chip_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/board_common&quot;"/>
-								</option>
+								<option id="gnu.both.asm.option.include.paths.583912195" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath"/>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.172762061" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.290756885" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 							</tool>

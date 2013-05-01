@@ -1,10 +1,10 @@
 //*****************************************************************************
-//   +--+       
-//   | ++----+   
-//   +-++    |  
-//     |     |  
-//   +-+--+  |   
-//   | +--+--+  
+//   +--+
+//   | ++----+
+//   +-++    |
+//     |     |
+//   +-+--+  |
+//   | +--+--+
 //   +----+    Copyright (c) 2010-12 Code Red Technologies Ltd.
 //
 // Microcontroller Startup code for use with Red Suite
@@ -12,19 +12,19 @@
 // Version : 120126
 //
 // Software License Agreement
-// 
-// The software is owned by Code Red Technologies and/or its suppliers, and is 
-// protected under applicable copyright laws.  All rights are reserved.  Any 
-// use in violation of the foregoing restrictions may subject the user to criminal 
-// sanctions under applicable laws, as well as to civil liability for the breach 
+//
+// The software is owned by Code Red Technologies and/or its suppliers, and is
+// protected under applicable copyright laws.  All rights are reserved.  Any
+// use in violation of the foregoing restrictions may subject the user to criminal
+// sanctions under applicable laws, as well as to civil liability for the breach
 // of the terms and conditions of this license.
-// 
+//
 // THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
 // OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
 // MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
 // USE OF THIS SOFTWARE FOR COMMERCIAL DEVELOPMENT AND/OR EDUCATION IS SUBJECT
 // TO A CURRENT END USER LICENSE AGREEMENT (COMMERCIAL OR EDUCATIONAL) WITH
-// CODE RED TECHNOLOGIES LTD. 
+// CODE RED TECHNOLOGIES LTD.
 //
 //*****************************************************************************
 #if defined (__cplusplus)
@@ -56,95 +56,95 @@ extern "C" {
 extern "C" {
 #endif
 
-//*****************************************************************************
-//
-// Forward declaration of the default handlers. These are aliased.
-// When the application defines a handler (with the same name), this will 
-// automatically take precedence over these weak definitions
-//
-//*****************************************************************************
-     void ResetISR(void);
-WEAK void NMI_Handler(void);
-WEAK void HardFault_Handler(void);
-WEAK void MemManage_Handler(void);
-WEAK void BusFault_Handler(void);
-WEAK void UsageFault_Handler(void);
-WEAK void SVC_Handler(void);
-WEAK void DebugMon_Handler(void);
-WEAK void PendSV_Handler(void);
-WEAK void SysTick_Handler(void);
-WEAK void IntDefaultHandler(void);
+    //*****************************************************************************
+    //
+    // Forward declaration of the default handlers. These are aliased.
+    // When the application defines a handler (with the same name), this will
+    // automatically take precedence over these weak definitions
+    //
+    //*****************************************************************************
+    void ResetISR(void);
+    WEAK void NMI_Handler(void);
+    WEAK void HardFault_Handler(void);
+    WEAK void MemManage_Handler(void);
+    WEAK void BusFault_Handler(void);
+    WEAK void UsageFault_Handler(void);
+    WEAK void SVC_Handler(void);
+    WEAK void DebugMon_Handler(void);
+    WEAK void PendSV_Handler(void);
+    WEAK void SysTick_Handler(void);
+    WEAK void IntDefaultHandler(void);
 
-//*****************************************************************************
-//
-// Forward declaration of the specific IRQ handlers. These are aliased
-// to the IntDefaultHandler, which is a 'forever' loop. When the application
-// defines a handler (with the same name), this will automatically take 
-// precedence over these weak definitions
-//
-//*****************************************************************************
-void WDT_IRQHandler(void) ALIAS(IntDefaultHandler);
-void TIMER0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void TIMER1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void TIMER2_IRQHandler(void) ALIAS(IntDefaultHandler);
-void TIMER3_IRQHandler(void) ALIAS(IntDefaultHandler);
-void UART0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void UART1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void UART2_IRQHandler(void) ALIAS(IntDefaultHandler);
-void UART3_IRQHandler(void) ALIAS(IntDefaultHandler);
-void PWM1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void I2C0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void I2C1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void I2C2_IRQHandler(void) ALIAS(IntDefaultHandler);
-void SPI_IRQHandler(void) ALIAS(IntDefaultHandler);
-void SSP0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void SSP1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void PLL0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void RTC_IRQHandler(void) ALIAS(IntDefaultHandler);
-void EINT0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void EINT1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void EINT2_IRQHandler(void) ALIAS(IntDefaultHandler);
-void EINT3_IRQHandler(void) ALIAS(IntDefaultHandler);
-void ADC_IRQHandler(void) ALIAS(IntDefaultHandler);
-void BOD_IRQHandler(void) ALIAS(IntDefaultHandler);
-void USB_IRQHandler(void) ALIAS(IntDefaultHandler);
-void CAN_IRQHandler(void) ALIAS(IntDefaultHandler);
-void DMA_IRQHandler(void) ALIAS(IntDefaultHandler);
-void I2S_IRQHandler(void) ALIAS(IntDefaultHandler);
-void ENET_IRQHandler(void) ALIAS(IntDefaultHandler);
-void RIT_IRQHandler(void) ALIAS(IntDefaultHandler);
-void MCPWM_IRQHandler(void) ALIAS(IntDefaultHandler);
-void QEI_IRQHandler(void) ALIAS(IntDefaultHandler);
-void PLL1_IRQHandler(void) ALIAS(IntDefaultHandler);
-void USBActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
-void CANActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
-void MCI_IRQHandler(void) ALIAS(IntDefaultHandler);
-void UART4_IRQHandler(void) ALIAS(IntDefaultHandler);
-void SSP2_IRQHandler(void) ALIAS(IntDefaultHandler);
-void LCD_IRQHandler(void) ALIAS(IntDefaultHandler);
-void GPIO_IRQHandler(void) ALIAS(IntDefaultHandler);
-void PWM0_IRQHandler(void) ALIAS(IntDefaultHandler);
-void EEPROM_IRQHandler(void) ALIAS(IntDefaultHandler);
+    //*****************************************************************************
+    //
+    // Forward declaration of the specific IRQ handlers. These are aliased
+    // to the IntDefaultHandler, which is a 'forever' loop. When the application
+    // defines a handler (with the same name), this will automatically take
+    // precedence over these weak definitions
+    //
+    //*****************************************************************************
+    void WDT_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void TIMER0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void TIMER1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void TIMER2_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void TIMER3_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void UART0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void UART1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void UART2_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void UART3_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void PWM1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void I2C0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void I2C1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void I2C2_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void SPI_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void SSP0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void SSP1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void PLL0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void RTC_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void EINT0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void EINT1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void EINT2_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void EINT3_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void ADC_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void BOD_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void USB_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void CAN_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void DMA_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void I2S_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void ENET_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void RIT_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void MCPWM_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void QEI_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void PLL1_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void USBActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void CANActivity_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void MCI_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void UART4_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void SSP2_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void LCD_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void GPIO_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void PWM0_IRQHandler(void) ALIAS(IntDefaultHandler);
+    void EEPROM_IRQHandler(void) ALIAS(IntDefaultHandler);
 
-//*****************************************************************************
-//
-// The entry point for the application.
-// __main() is the entry point for Redlib based applications
-// main() is the entry point for Newlib based applications
-//
-//*****************************************************************************
+    //*****************************************************************************
+    //
+    // The entry point for the application.
+    // __main() is the entry point for Redlib based applications
+    // main() is the entry point for Newlib based applications
+    //
+    //*****************************************************************************
 #if defined (__REDLIB__)
-extern void __main(void);
+    extern void __main(void);
 #endif
-extern int main(void);
-//*****************************************************************************
-//
-// External declaration for the pointer to the stack top from the Linker Script
-//
-//*****************************************************************************
-extern void _vStackTop(void);
+    extern int main(void);
+    //*****************************************************************************
+    //
+    // External declaration for the pointer to the stack top from the Linker Script
+    //
+    //*****************************************************************************
+    extern void _vStackTop(void);
 
-//*****************************************************************************
+    //*****************************************************************************
 #if defined (__cplusplus)
 } // extern "C"
 #endif
@@ -345,7 +345,7 @@ ResetISR(void) {
 #endif
 
 	//
-	// main() shouldn't return, but if it does, we'll just enter an infinite loop 
+	// main() shouldn't return, but if it does, we'll just enter an infinite loop
 	//
 	while (1) {
 		;

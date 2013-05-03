@@ -42,8 +42,19 @@
 __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 
 #include "board.h"
-#include <stdio.h>
 
+#include <stdio.h>
+static inline void delay_MS(uint16_t Milliseconds)
+{
+	while (Milliseconds--)
+	{
+		volatile uint32_t i;
+
+		for (i = 0; i < (4 * 1000); i++) { /* This logic was tested. It gives app. 1 micro sec delay */
+			;
+		}
+	}
+}
 /** @defgroup EXAMPLES_PERIPH_17XX40XX_BLINKY LPC17xx/40xx Simple Blinky example
  * @ingroup EXAMPLES_PERIPH_17XX40XX
  * <b>Example description</b><br>
@@ -72,8 +83,8 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
  * Private types/enumerations/variables
  ****************************************************************************/
 
-#define TICKRATE1_HZ 20
-#define TICKRATE2_HZ 10
+//#define TICKRATE1_HZ 20
+//#define TICKRATE2_HZ 10
 
 /*****************************************************************************
  * Public types/enumerations/variables
@@ -90,11 +101,11 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 #if defined (__cplusplus)
 extern "C" {
 #endif
-/**
+/*
  * @brief   Handle interrupt from 32-bit timer 1
  * @return  Nothing
- */
-void TIMER1_IRQHandler(void)
+
+/void TIMER1_IRQHandler(void)
 {
     static bool On = false;
 
@@ -105,10 +116,12 @@ void TIMER1_IRQHandler(void)
     }
 }
 
-/**
- * @brief   Handle interrupt from 32-bit timer 2
- * @return  Nothing
- */
+
+
+  @brief   Handle interrupt from 32-bit timer 2
+  @return  Nothing
+
+
 void TIMER2_IRQHandler(void)
 {
     static bool On = false;
@@ -118,25 +131,32 @@ void TIMER2_IRQHandler(void)
         On = (bool) !On;
         Board_LED_Set(1, On);
     }
-}
+}*/
 #if defined (__cplusplus)
 } // extern "C"
 #endif
 
-/**
+/*
  * @brief   main routine for blinky example
  * @return  Function should not exit.
  */
 int main(void)
 {
-    uint32_t timerFreq;
+    //uint32_t timerFreq;
 
     Board_Init();
 
     DEBUGSTR("Blinky example using timers 1 and 2!\r\n");
 
     /* Enable timer 1 clock and get clock rate */
-    Chip_TIMER_Init(LPC_TIMER1);
+    //Chip_TIMER_Init(LPC_TIMER1);
+    Board_Buttons_Init();
+    Board_LED_Test(26);
+    //Board_LED_Init(void);
+    uint32_t status = Buttons_GetStatus();
+    DEBUGOUT("status %d\n",status);
+    //BUTTONS_BUTTON1 = 1;
+    	/*
 #if defined(CHIP_LPC175X_6X)
     timerFreq = Chip_Clock_GetPeripheralClockRate(SYSCTL_PCLK_TIMER1);
 #else
@@ -149,35 +169,25 @@ int main(void)
     Chip_TIMER_ResetOnMatchEnable(LPC_TIMER1, 1);
     Chip_TIMER_Enable(LPC_TIMER1);
 
-    /* Enable timer interrupt */
-    NVIC_EnableIRQ(TIMER1_IRQn);
-    NVIC_ClearPendingIRQ(TIMER1_IRQn);
+     Enable timer interrupt
 
-    DEBUGOUT("Timer 1 clock     = %d Hz\r\n", timerFreq);
-    DEBUGOUT("Timer 1 tick rate = %d Hz\r\n", TICKRATE1_HZ);
+    //DEBUGOUT("Timer 1 clock     = %d Hz\r\n", timerFreq);
+    //DEBUGOUT("Timer 1 tick rate = %d Hz\r\n", TICKRATE1_HZ);
 
-    /* Enable timer 2 clock and get clock rate */
-    Chip_TIMER_Init(LPC_TIMER2);
-#if defined(CHIP_LPC175X_6X)
-    timerFreq = Chip_Clock_GetPeripheralClockRate(SYSCTL_PCLK_TIMER2);
-#else
-    timerFreq = Chip_Clock_GetPeripheralClockRate();
-#endif
+    // Enable timer 2 clock and get clock rate
 
-    Chip_TIMER_Reset(LPC_TIMER2);
-    Chip_TIMER_MatchEnableInt(LPC_TIMER2, 1);
-    Chip_TIMER_SetMatch(LPC_TIMER2, 1, (timerFreq / TICKRATE2_HZ));
-    Chip_TIMER_ResetOnMatchEnable(LPC_TIMER2, 1);
-    Chip_TIMER_Enable(LPC_TIMER2);
-
-    /* Enable timer interrupt */
-    NVIC_EnableIRQ(TIMER2_IRQn);
-    NVIC_ClearPendingIRQ(TIMER2_IRQn);
-
-    DEBUGOUT("Timer 2 clock     = %d Hz\r\n", timerFreq);
-    DEBUGOUT("Timer 2 tick rate = %d Hz\r\n", TICKRATE2_HZ);
+     */
 
     while (1) {
-        __WFI();
-    }
+       // __WFI();
+        int status = Buttons_GetStatus();
+        DEBUGOUT("status %d\n",status);
+        if(status==BUTTONS_BUTTON1)
+        {
+        	 Board_LED_Set(1,true);
+        	 delay_MS(2000);
+        	 Board_LED_Set(1,false);
+        }
+       }
+
 }

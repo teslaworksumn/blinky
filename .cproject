@@ -21,7 +21,12 @@
 					<folderInfo id="com.crt.advproject.config.exe.debug.1710690998." name="/" resourcePath="">
 						<toolChain id="com.crt.advproject.toolchain.exe.debug.1354825524" name="Code Red MCU Tools" superClass="com.crt.advproject.toolchain.exe.debug">
 							<targetPlatform binaryParser="org.eclipse.cdt.core.ELF;org.eclipse.cdt.core.GNU_ELF" id="com.crt.advproject.platform.exe.debug.8576169" name="ARM-based MCU (Debug)" superClass="com.crt.advproject.platform.exe.debug"/>
-							<builder buildPath="${workspace_loc:/blinky/Debug}" id="com.crt.advproject.builder.exe.debug.451938877" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.exe.debug"/>
+							<builder buildPath="${workspace_loc:/blinky/Debug}" id="com.crt.advproject.builder.exe.debug.451938877" keepEnvironmentInBuildfile="false" managedBuildOn="true" name="Gnu Make Builder" superClass="com.crt.advproject.builder.exe.debug">
+								<outputEntries>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Debug"/>
+									<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="outputPath" name="Release"/>
+								</outputEntries>
+							</builder>
 							<tool id="com.crt.advproject.cpp.exe.debug.60661210" name="MCU C++ Compiler" superClass="com.crt.advproject.cpp.exe.debug">
 								<option id="com.crt.advproject.cpp.arch.1235528422" name="Architecture" superClass="com.crt.advproject.cpp.arch" value="com.crt.advproject.cpp.target.cm3" valueType="enumerated"/>
 								<option id="com.crt.advproject.cpp.thumb.706127353" name="Thumb mode" superClass="com.crt.advproject.cpp.thumb" value="true" valueType="boolean"/>
@@ -34,13 +39,18 @@
 								</option>
 								<option id="gnu.cpp.compiler.option.other.other.1989058810" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections -fno-rtti -fno-exceptions" valueType="string"/>
 								<option id="gnu.cpp.compiler.option.include.paths.123279417" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/CMSIS/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_ip&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_chip/chip_17xx_40xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_chip/chip_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/board_common&quot;"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/CMSIS/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_ip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_17xx_40xx"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/board_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include/ipv4"/>
+									<listOptionValue builtIn="false" value="/lpcopen/applications/lpc17xx_40xx/examples/lwip/lwip_tcpecho_sa"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/contrib/apps/tcpecho_raw"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lpclwip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.cpp.input.403059012" superClass="com.crt.advproject.compiler.cpp.input"/>
 							</tool>
@@ -57,13 +67,18 @@
 								</option>
 								<option id="gnu.c.compiler.option.misc.other.1444498497" name="Other flags" superClass="gnu.c.compiler.option.misc.other" value="-c -fmessage-length=0 -fno-builtin -ffunction-sections -fdata-sections" valueType="string"/>
 								<option id="gnu.c.compiler.option.include.paths.1129455743" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/CMSIS/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_ip&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_chip/chip_17xx_40xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_chip/chip_common&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${LPC_HOME}/software/lpc_core/lpc_board/board_common&quot;"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/CMSIS/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_ip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_17xx_40xx"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/board_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include/ipv4"/>
+									<listOptionValue builtIn="false" value="/lpcopen/applications/lpc17xx_40xx/examples/lwip/lwip_tcpecho_sa"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/contrib/apps/tcpecho_raw"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lpclwip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include"/>
 								</option>
 								<inputType id="com.crt.advproject.compiler.input.2134085078" superClass="com.crt.advproject.compiler.input"/>
 							</tool>
@@ -72,7 +87,20 @@
 								<option id="com.crt.advproject.gas.thumb.1995150191" name="Thumb mode" superClass="com.crt.advproject.gas.thumb" value="true" valueType="boolean"/>
 								<option id="gnu.both.asm.option.flags.crt.1714185744" name="Assembler flags" superClass="gnu.both.asm.option.flags.crt" value="-c -x assembler-with-cpp -D__NEWLIB__ -DDEBUG -D__CODE_RED" valueType="string"/>
 								<option id="com.crt.advproject.gas.hdrlib.1273934693" name="Use headers for C library" superClass="com.crt.advproject.gas.hdrlib" value="com.crt.advproject.gas.hdrlib.newlib" valueType="enumerated"/>
-								<option id="gnu.both.asm.option.include.paths.1220036142" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths"/>
+								<option id="gnu.both.asm.option.include.paths.1220036142" name="Include paths (-I)" superClass="gnu.both.asm.option.include.paths" valueType="includePath">
+									<listOptionValue builtIn="false" value="/lpcopen/software/CMSIS/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_ip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_17xx_40xx"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/boards_17xx_40xx/ea_devkit_17884088/ea_devkit_1788"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_chip/chip_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lpc_core/lpc_board/board_common"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include/ipv4"/>
+									<listOptionValue builtIn="false" value="/lpcopen/applications/lpc17xx_40xx/examples/lwip/lwip_tcpecho_sa"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/contrib/apps/tcpecho_raw"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lpclwip"/>
+									<listOptionValue builtIn="false" value="/lpcopen/software/lwip/lwip/src/include"/>
+								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.assembler.input.1194269684" superClass="cdt.managedbuild.tool.gnu.assembler.input"/>
 								<inputType id="com.crt.advproject.assembler.input.1652086843" name="Additional Assembly Source Files" superClass="com.crt.advproject.assembler.input"/>
 							</tool>
@@ -101,9 +129,6 @@
 							<tool id="com.crt.advproject.link.exe.debug.1630272507" name="MCU Linker" superClass="com.crt.advproject.link.exe.debug"/>
 						</toolChain>
 					</folderInfo>
-					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
-					</sourceEntries>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>
@@ -210,7 +235,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="src"/>
+						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -320,5 +345,8 @@
 		<scannerConfigBuildInfo instanceId="com.crt.advproject.config.exe.debug.1710690998;com.crt.advproject.config.exe.debug.1710690998.;com.crt.advproject.cpp.exe.debug.60661210;com.crt.advproject.compiler.cpp.input.403059012">
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.crt.advproject.GCCManagedMakePerProjectProfileCPP"/>
 		</scannerConfigBuildInfo>
+	</storageModule>
+	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
+		<buildTargets/>
 	</storageModule>
 </cproject>

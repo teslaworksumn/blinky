@@ -1,0 +1,133 @@
+#define CCLK		120000000
+#define PCLK		 60000000
+
+#define rFIO1DIR	(*(volatile unsigned*)(0x20098020))
+#define rFIO1MASK 	(*(volatile unsigned*)(0x20098030))
+#define rFIO1PIN	(*(volatile unsigned*)(0x20098034))
+#define rFIO1SET	(*(volatile unsigned*)(0x20098038))
+#define rFIO1CLR	(*(volatile unsigned*)(0x2009803c))
+
+#define rISER0  	(*(volatile unsigned*)(0xE000E100))
+
+#define rCLKSRCSEL  (*(volatile unsigned *)(0x400FC10C))     //时钟源选择寄存器
+#define rPLL0CON    (*(volatile unsigned *)(0x400FC080))     //PLL0控制寄存器
+#define rPLL0CFG    (*(volatile unsigned *)(0x400FC084))     //PLL0配置寄存器
+#define rPLL0STAT   (*(volatile unsigned *)(0x400FC088))     //PLL0状态寄存器
+#define rPLL0FEED   (*(volatile unsigned *)(0x400FC08C))     //PLL0馈送寄存器
+#define rPLL1CON    (*(volatile unsigned *)(0x400FC0A0))
+#define rPLL1CFG    (*(volatile unsigned *)(0x400FC0A4))
+#define rPLL1STAT   (*(volatile unsigned *)(0x400FC0A8))
+#define rPLL1FEED   (*(volatile unsigned *)(0x400FC0AC))
+#define rCCLKSEL    (*(volatile unsigned *)(0x400FC104))     //CPU时钟选择寄存器
+#define rUSBCLKSEL  (*(volatile unsigned *)(0x400FC108))     //USB时钟选择寄存器
+#define rPCLKSEL    (*(volatile unsigned *)(0x400FC1A8))     //外设时钟寄存器
+#define rPCON       (*(volatile unsigned *)(0x400FC0C0))
+#define rPXCONP     (*(volatile unsigned *)(0x400FC0C4))
+#define rSCS        (*(volatile unsigned *)(0x400FC1A0))     //系统控制和状态寄存器
+#define rCLKOUTCFG  (*(volatile unsigned *)(0x400FC1C8))
+
+#define rIOCON_P0_10	(*(volatile unsigned *)(0x4002C028))
+#define rIOCON_P0_11	(*(volatile unsigned *)(0x4002C02C))
+#define rPCONP		(*(volatile unsigned *)(0x400FC0C4))
+#define rU2LCR  	(*(volatile unsigned *)(0x4009800C))
+#define rU2FDR		(*(volatile unsigned *)(0x40098028))
+#define rU2DLL		(*(volatile unsigned *)(0x40098000))
+#define rU2DLM		(*(volatile unsigned *)(0x40098004))
+#define rU2TER		(*(volatile unsigned *)(0x40098030))
+#define rU2THR		(*(volatile unsigned *)(0x40098000))
+#define rU2RBR		(*(volatile unsigned *)(0x40098000))
+#define rU2FCR		(*(volatile unsigned *)(0x40098008))
+#define rU2IIR		(*(volatile unsigned *)(0x40098008))
+#define rU2LSR		(*(volatile unsigned *)(0x40098014))
+#define rU2IER		(*(volatile unsigned *)(0x40098004))
+#define rU2ACR		(*(volatile unsigned *)(0x40098020))
+
+void UART2_IRQHandler()
+{
+	unsigned int intId;
+	char tmp_char;
+	
+	intId = rU2IIR&0xf;
+	rU2THR = intId;
+	
+	if(intId == 0xc || intId == 0x4)	//RDA或者CTI中断
+	{
+		rU2LCR &= ~(0x1<<7);	//DLAB=0
+		tmp_char = rU2RBR&0xff;
+		rU2THR = tmp_char;
+	}
+	intId = rU2IIR&0xf;
+	rU2THR = intId;
+    
+    
+	if(tmp_char == 0xa5)
+		rFIO1PIN |= (1<<18);
+	else if(tmp_char == 0x5a)
+		rFIO1PIN &= ~(1<<18);
+}
+
+void SystemInit()
+{
+    rSCS &= ~(0x1<<4);            //频率12M
+    rSCS |= (0x1<<5);             //使能主振荡器
+    while(0 == (rSCS & (0x1<<6)));//等待主振荡器稳定
+    
+    rCLKSRCSEL = 0x1;
+    
+    rPLL0CFG = 0x9;                 //配置CCLK = 120M
+    rPLL0CON = 0x01;
+    rPLL0FEED = 0xAA;
+    rPLL0FEED =0x55;
+    while(0 == (rPLL0STAT & (0x1<<10)));
+    
+    rCCLKSEL = (0x1 | (0x1<<8));
+    rPCLKSEL = 0x2;                 //配置PCLK = 60M
+    rCLKOUTCFG = 0x0 | (0xb<<4) | (0x1<<8);
+}
+
+void Init_Uart2()
+{
+	rPCONP |= 0x1<<24;  	//使能UART2功率控制
+	
+	rIOCON_P0_10 = (rIOCON_P0_10 & (~0x7)) | 0x1;	//P0.10 P0.11做UART2的发送和接收管脚
+	rIOCON_P0_11 = (rIOCON_P0_11 & (~0x7)) | 0x1;
+    
+	rU2LCR |= 0x1<<7;		//DLAB=1
+	rU2FDR = 1 | 2<<4;  	//波特率设置115200
+	rU2DLM = 0;
+	rU2DLL = 22;
+	rU2LCR &= ~(0x1<<7);	//DLAB=0
+	rU2LCR |= 0x3;  		//8位数据位，无校验，1个停止位
+	
+	rU2TER |= 0x1<<7;		//使能串口2的发送
+	
+	rU2IER |= 0x1;  		//使能串口2的接收中断
+	rU2FCR |= 0x1;  		//复位FIFO,设置接收1个字符触发中断
+	rU2FCR |= 0x1<<1 | 0x1<<2;
+	rISER0 |= 0x1<<7;		//使能串口2中断
+	
+}
+
+void Uart2SendC(char c)
+{
+	rU2THR = c & 0xff;
+	while(!(rU2LSR&(0x1<<5)));  	//等待rU2THR中的数据发送完成，防止数据溢出
+}
+
+void Uart2SendS(char *s)
+{
+	while(*s)
+	{
+		Uart2SendC(*s);
+		s++;
+	}
+}
+
+int main(void)
+{
+	char str[] = {"\n\r1, Display the U2IIR[3:0] + Data + U2IIR[3:0]\n\r2, Send 0x5a ---> Turn on the LED\n\r3, Send 0xa5 --->Turn off the LED\n\r"};
+	rFIO1DIR |= (1<<18); //GPIO1.18 -> OUTPUT
+	Init_Uart2();
+	Uart2SendS(str);
+	while(1);
+}

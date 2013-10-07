@@ -21,17 +21,57 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 #include "../../ribsy/include/pt.h"
 
 // =============================================================================
+// Globals
+// =============================================================================
+
+// =============================================================================
+// Threads
+// =============================================================================
+
+// =============================================================================
 // main
 // =============================================================================
 
-int main(void)
-{
-    Board_Init();
+static int protothread1_flag, protothread2_flag;
 
-    Board_LED_Set(0, true);
-    Board_LED_Set(1, false);
+static int protothread1(struct pt *pt)
+{
+    PT_BEGIN(pt);
 
     while (1) {
-        __WFI();
+        PT_WAIT_UNTIL(pt, protothread2_flag != 0);
+        Board_LED_Set(0, true);
+        protothread2_flag = 0;
+        protothread1_flag = 1;
+    }
+
+    PT_END(pt);
+}
+
+static int protothread2(struct pt *pt)
+{
+    PT_BEGIN(pt);
+
+    while(1) {
+        protothread2_flag = 1;
+        PT_WAIT_UNTIL(pt, protothread1_flag != 0);
+        Board_LED_Set(1, true);
+        protothread1_flag = 0;
+    }
+
+    PT_END(pt);
+}
+
+static struct pt pt1, pt2;
+
+int main(void)
+{
+	Board_Init();
+    PT_INIT(&pt1);
+    PT_INIT(&pt2);
+
+    while(1) {
+        protothread1(&pt1);
+        protothread2(&pt2);
     }
 }

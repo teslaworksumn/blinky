@@ -17,6 +17,8 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 
 #include "board.h"
 extern "C" {
+#include "Event.h"
+#include "Statelet.h"
 #include "ring_buffer.h"
 }
 #include <stdio.h>
@@ -24,134 +26,16 @@ extern "C" {
 #include "../../ribsy/include/pt.h"
 
 // =============================================================================
-// Types
-// =============================================================================
-
-typedef enum _EventCode {
-	EventCodeNone,
-	EventCodeIRApproach,
-	EventCodeIRLeave,
-	EventCodeRFIDData,
-	EventCodeLock,
-	EventCodeUnlock,
-	EventCodeDurationData,
-	EventCodeLockout,
-	EventCodeEndLockout,
-	EventCodeOpen,
-	EventCodeClosed,
-	EventCodeHandleOpen,
-	EventCodeHandleClose,
-	EventCodePowerOn,
-	EventCodePowerOff,
-	EventCodeNetworkConnectionUp,
-	EventCodeNetworkConnectionDown
-} EventCode;
-
-typedef struct _Event {
-    EventCode code;
-    void *data;
-} Event;
-
-typedef void (*Statelet)(Event *event);
-
-// =============================================================================
 // Globals & Defines
 // =============================================================================
 
-#define EVENT_STACK_SIZE 32
-
 bool InterceptingUART = false;
 
-// Event stack
-
-struct {
-    int size;
-    Event events[EVENT_STACK_SIZE];
-} _EventStack;
-
-void InitEventStack() {
-    _EventStack.size = 0;
-}
-
-Event *PushEvent() {
-	Event *e = &_EventStack.events[_EventStack.size];
-    _EventStack.size += 1;
-    return e;
-}
-
-Event *PeekEvent() {
-    return &_EventStack.events[_EventStack.size - 1];
-}
-
-Event *PopEvent() {
-	if (_EventStack.size <= 0) {
-		return NULL;
-	}
-
-    _EventStack.size -= 1;
-    return &_EventStack.events[_EventStack.size];
-}
-
-// Stateling stack
-
-struct {
-    int size;
-    Statelet statelets[EVENT_STACK_SIZE];
-    int eventDepth;
-} _StateletStack;
-
-static void Base(Event *e);
-
-void InitStateletStack() {
-    _StateletStack.size = 0;
-    _StateletStack.statelets[0] = &Base;
-}
-
-void PushStatelet(Statelet s) {
-    _StateletStack.statelets[_StateletStack.size] = s;
-    _StateletStack.size += 1;
-}
-
-void TryStatelet(Event *e) {
-	for (_StateletStack.eventDepth = 0; _StateletStack.eventDepth < _StateletStack.size; _StateletStack.eventDepth += 1) {
-		_StateletStack.statelets[_StateletStack.eventDepth](e);
-	}
-	if (_StateletStack.eventDepth != _StateletStack.size) {
-		_StateletStack.statelets[_StateletStack.size - 1](NULL);
-	}
-}
-
-void Topple(EventCode code, Statelet s, Event *e) {
-	if (e->code == code) {
-		int i = _StateletStack.size - _StateletStack.eventDepth;
-		_StateletStack.statelets[i] = s;
-		_StateletStack.size = i + 1;
-	}
-}
+static EventCode MapCharacterToEventCode(int c);
 
 // =============================================================================
 // Threads
 // =============================================================================
-
-// =============================================================================
-// main
-// =============================================================================
-
-static EventCode MapCharacterToEventCode(int c) {
-	EventCode ret = EventCodeNone;
-
-	switch (c) {
-	case 0x92:
-	case 0xb2:
-		ret = EventCodeUnlock;
-		break;
-	case 0x70:
-		ret = EventCodeLock;
-		break;
-	}
-
-	return ret;
-}
 
 static PT_THREAD(DriveEvents(struct pt *pt))
 {
@@ -209,6 +93,26 @@ static PT_THREAD(Ribsy(struct pt *pt))
     PT_END(pt);
 }
 
+// =============================================================================
+// main
+// =============================================================================
+
+static EventCode MapCharacterToEventCode(int c) {
+	EventCode ret = EventCodeNone;
+
+	switch (c) {
+	case 0x92:
+	case 0xb2:
+		ret = EventCodeUnlock;
+		break;
+	case 0x70:
+		ret = EventCodeLock;
+		break;
+	}
+
+	return ret;
+}
+
 static void Unlocked(Event *e) {
 	if (e == NULL) {
 		Board_UARTPutSTR("Unlocked loaded.");
@@ -247,7 +151,7 @@ void Setup() {
 
 	// Stacks
 	InitEventStack();
-	InitStateletStack();
+	InitStateletStack(&Base);
 
 	// Initialize protothreads
     PT_INIT(&ptDriveEvents);

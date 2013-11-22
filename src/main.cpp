@@ -15,19 +15,20 @@
 #include <NXP/crp.h>
 __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 
-#include "board.h"
 extern "C" {
 #include "Event.h"
-#include "ring_buffer.h"
 #include "Statelets/Statelets.h"
+#include "WeakQueue.h"
 }
+#include "board.h"
 #include <stdio.h>
-
 #include "../../ribsy/include/pt.h"
 
 // =============================================================================
 // Globals & Defines
 // =============================================================================
+
+#define EVENT_STACK_SIZE 32
 
 bool InterceptingUART = false;
 
@@ -35,6 +36,10 @@ static struct pt ptDriveEvents;
 static struct pt ptUnlockDriver;
 static struct pt ptLockDriver;
 static struct pt ptRibsy;
+
+Event _Events[EVENT_STACK_SIZE];
+WeakQueue _EventQueue;
+WeakQueue *EventQueue = &_EventQueue;
 
 static EventCode MapCharacterToEventCode(int c);
 static void Setup();
@@ -52,8 +57,9 @@ static PT_THREAD(DriveEvents(struct pt *pt))
 	while (1) {
 		PT_WAIT_UNTIL(pt, (!InterceptingUART && (c = Board_UARTGetChar()) != EOF) && (c != 0xe7) && (c != 0xfe));
 //		Board_UARTPutChar(c);
-		Event *e = PushEvent();
+		Event *e = (Event *)WeakQueueReserve(EventQueue);
 		e->code = MapCharacterToEventCode(c);
+		WeakQueueCommit(EventQueue);
 	}
 
     PT_END(pt);
@@ -64,9 +70,9 @@ static PT_THREAD(UnlockDriver(struct pt *pt))
     PT_BEGIN(pt);
 
     while (1) {
-		PT_WAIT_UNTIL(pt, PeekEvent()->code == EventCodeUnlock);
-		PopEvent();
+		PT_WAIT_UNTIL(pt, ((Event *)WeakQueueSnag(EventQueue))->code == EventCodeUnlock);
 		Board_UARTPutChar('u');
+		WeakQueueDecommit(EventQueue);
     }
 
     PT_END(pt);
@@ -77,9 +83,9 @@ static PT_THREAD(LockDriver(struct pt *pt))
     PT_BEGIN(pt);
 
     while (1) {
-		PT_WAIT_UNTIL(pt, PeekEvent()->code == EventCodeLock);
-		PopEvent();
+		PT_WAIT_UNTIL(pt, ((Event *)WeakQueueSnag(EventQueue))->code == EventCodeLock);
 		Board_UARTPutChar('l');
+		WeakQueueDecommit(EventQueue);
     }
 
     PT_END(pt);
@@ -92,8 +98,9 @@ static PT_THREAD(Ribsy(struct pt *pt))
     PT_BEGIN(pt);
 
     while (1) {
-    	PT_WAIT_UNTIL(pt, (e = PopEvent()) != NULL);
+    	PT_WAIT_UNTIL(pt, (e = (Event *)WeakQueueSnag(EventQueue)) != NULL);
     	TryStatelet(e);
+    	WeakQueueDecommit(EventQueue);
     }
 
     PT_END(pt);
@@ -127,7 +134,7 @@ static void Setup() {
 	Board_Debug_Init();
 
 	// Stacks
-	InitEventStack();
+	WeakQueueInit(EventQueue, _Events, sizeof(Event), EVENT_STACK_SIZE);
 	InitStateletStack(Base);
 
 	// Initialize protothreads
@@ -143,7 +150,7 @@ int main(void)
 
 	Board_UARTPutSTR("Ready; let's do this.\r\n");
 
-    while(1) {
+    while (1) {
         PT_SCHEDULE(DriveEvents(&ptDriveEvents));
         PT_SCHEDULE(UnlockDriver(&ptUnlockDriver));
         PT_SCHEDULE(LockDriver(&ptLockDriver));

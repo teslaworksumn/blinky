@@ -18,8 +18,8 @@ __CRP extern const unsigned int CRP_WORD = CRP_NO_CRP ;
 #include "board.h"
 extern "C" {
 #include "Event.h"
-#include "Statelet.h"
 #include "ring_buffer.h"
+#include "Statelets/Statelets.h"
 }
 #include <stdio.h>
 
@@ -37,17 +37,7 @@ static struct pt ptLockDriver;
 static struct pt ptRibsy;
 
 static EventCode MapCharacterToEventCode(int c);
-
-static void BaseRun();
-static void BaseHandleEvent(Event *e);
-static void UnlockedRun();
-static void UnlockedHandleEvent(Event *e);
-static void LockedRun();
-static void LockedHandleEvent(Event *e);
-
-Statelet Base = { BaseRun, BaseHandleEvent };
-Statelet Unlocked = { UnlockedRun, UnlockedHandleEvent };
-Statelet Locked = { LockedRun, LockedHandleEvent };
+static void Setup();
 
 // =============================================================================
 // Threads
@@ -129,30 +119,7 @@ static EventCode MapCharacterToEventCode(int c) {
 	return ret;
 }
 
-static void UnlockedRun() {
-	Board_UARTPutSTR("Unlocked loaded.");
-}
-
-static void UnlockedHandleEvent(Event *e) {
-}
-
-static void LockedRun() {
-	Board_UARTPutSTR("Locked loaded.");
-}
-
-static void LockedHandleEvent(Event *e) {
-}
-
-static void BaseRun() {
-	Board_UARTPutSTR("Base loaded.");
-}
-
-static void BaseHandleEvent(Event *e) {
-	Topple(EventCodeLock, Locked, e);
-	Topple(EventCodeUnlock, Unlocked, e);
-}
-
-void Setup() {
+static void Setup() {
 	// General board initialization
 	Board_Init();
 

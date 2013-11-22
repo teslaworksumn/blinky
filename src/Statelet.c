@@ -22,10 +22,10 @@ void PushStatelet(Statelet s) {
 
 void TryStatelet(Event *e) {
 	for (_StateletStack.eventDepth = 0; _StateletStack.eventDepth < _StateletStack.size; _StateletStack.eventDepth += 1) {
-		_StateletStack.statelets[_StateletStack.eventDepth](e);
+		_StateletStack.statelets[_StateletStack.eventDepth].handleEvent(e);
 	}
 	if (_StateletStack.eventDepth != _StateletStack.size) {
-		_StateletStack.statelets[_StateletStack.size - 1](NULL);
+		_StateletStack.statelets[_StateletStack.size - 1].run();
 	}
 }
 

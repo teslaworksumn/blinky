@@ -31,7 +31,23 @@ extern "C" {
 
 bool InterceptingUART = false;
 
+static struct pt ptDriveEvents;
+static struct pt ptUnlockDriver;
+static struct pt ptLockDriver;
+static struct pt ptRibsy;
+
 static EventCode MapCharacterToEventCode(int c);
+
+static void BaseRun();
+static void BaseHandleEvent(Event *e);
+static void UnlockedRun();
+static void UnlockedHandleEvent(Event *e);
+static void LockedRun();
+static void LockedHandleEvent(Event *e);
+
+Statelet Base = { BaseRun, BaseHandleEvent };
+Statelet Unlocked = { UnlockedRun, UnlockedHandleEvent };
+Statelet Locked = { LockedRun, LockedHandleEvent };
 
 // =============================================================================
 // Threads
@@ -113,34 +129,28 @@ static EventCode MapCharacterToEventCode(int c) {
 	return ret;
 }
 
-static void Unlocked(Event *e) {
-	if (e == NULL) {
-		Board_UARTPutSTR("Unlocked loaded.");
-		return;
-	}
+static void UnlockedRun() {
+	Board_UARTPutSTR("Unlocked loaded.");
 }
 
-static void Locked(Event *e) {
-	if (e == NULL) {
-		Board_UARTPutSTR("Locked loaded.");
-		return;
-	}
+static void UnlockedHandleEvent(Event *e) {
 }
 
-static void Base(Event *e) {
-	if (e == NULL) {
-		Board_UARTPutSTR("Base loaded.");
-		return;
-	}
-
-	Topple(EventCodeLock, &Locked, e);
-	Topple(EventCodeUnlock, &Unlocked, e);
+static void LockedRun() {
+	Board_UARTPutSTR("Locked loaded.");
 }
 
-static struct pt ptDriveEvents;
-static struct pt ptUnlockDriver;
-static struct pt ptLockDriver;
-static struct pt ptRibsy;
+static void LockedHandleEvent(Event *e) {
+}
+
+static void BaseRun() {
+	Board_UARTPutSTR("Base loaded.");
+}
+
+static void BaseHandleEvent(Event *e) {
+	Topple(EventCodeLock, Locked, e);
+	Topple(EventCodeUnlock, Unlocked, e);
+}
 
 void Setup() {
 	// General board initialization
@@ -151,7 +161,7 @@ void Setup() {
 
 	// Stacks
 	InitEventStack();
-	InitStateletStack(&Base);
+	InitStateletStack(Base);
 
 	// Initialize protothreads
     PT_INIT(&ptDriveEvents);

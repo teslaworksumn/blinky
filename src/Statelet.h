@@ -11,7 +11,10 @@
 
 #define STATELET_STACK_SIZE 32
 
-typedef void (*Statelet)(Event *event);
+typedef struct _Statelet {
+	void (*run)();
+	void (*handleEvent)(Event *);
+} Statelet;
 
 struct {
     int size;

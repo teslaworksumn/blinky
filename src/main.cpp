@@ -33,8 +33,6 @@ extern "C" {
 bool InterceptingUART = false;
 
 static struct pt ptDriveEvents;
-static struct pt ptUnlockDriver;
-static struct pt ptLockDriver;
 static struct pt ptRibsy;
 
 Event _Events[EVENT_STACK_SIZE];
@@ -65,32 +63,6 @@ static PT_THREAD(DriveEvents(struct pt *pt))
     PT_END(pt);
 }
 
-static PT_THREAD(UnlockDriver(struct pt *pt))
-{
-    PT_BEGIN(pt);
-
-    while (1) {
-		PT_WAIT_UNTIL(pt, ((Event *)WeakQueueSnag(EventQueue))->code == EventCodeUnlock);
-		Board_UARTPutChar('u');
-		WeakQueueDecommit(EventQueue);
-    }
-
-    PT_END(pt);
-}
-
-static PT_THREAD(LockDriver(struct pt *pt))
-{
-    PT_BEGIN(pt);
-
-    while (1) {
-		PT_WAIT_UNTIL(pt, ((Event *)WeakQueueSnag(EventQueue))->code == EventCodeLock);
-		Board_UARTPutChar('l');
-		WeakQueueDecommit(EventQueue);
-    }
-
-    PT_END(pt);
-}
-
 static PT_THREAD(Ribsy(struct pt *pt))
 {
 	static Event *e;
@@ -98,7 +70,7 @@ static PT_THREAD(Ribsy(struct pt *pt))
     PT_BEGIN(pt);
 
     while (1) {
-    	PT_WAIT_UNTIL(pt, (e = (Event *)WeakQueueSnag(EventQueue)) != NULL);
+    	PT_WAIT_UNTIL(pt, (e = (Event *)WeakQueueAccess(EventQueue)) != NULL);
     	TryStatelet(e);
     	WeakQueueDecommit(EventQueue);
     }
@@ -139,8 +111,6 @@ static void Setup() {
 
 	// Initialize protothreads
     PT_INIT(&ptDriveEvents);
-    PT_INIT(&ptUnlockDriver);
-    PT_INIT(&ptLockDriver);
     PT_INIT(&ptRibsy);
 }
 
@@ -152,8 +122,6 @@ int main(void)
 
     while (1) {
         PT_SCHEDULE(DriveEvents(&ptDriveEvents));
-        PT_SCHEDULE(UnlockDriver(&ptUnlockDriver));
-        PT_SCHEDULE(LockDriver(&ptLockDriver));
         PT_SCHEDULE(Ribsy(&ptRibsy));
     }
 }

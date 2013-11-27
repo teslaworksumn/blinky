@@ -11,7 +11,7 @@
 #include <stddef.h>
 
 void InitStateletStack(Statelet base) {
-    _StateletStack.size = 0;
+    _StateletStack.size = 1;
     _StateletStack.statelets[0] = base;
 }
 
@@ -24,7 +24,7 @@ void TryStatelet(Event *e) {
 	for (_StateletStack.eventDepth = 0; _StateletStack.eventDepth < _StateletStack.size; _StateletStack.eventDepth += 1) {
 		_StateletStack.statelets[_StateletStack.eventDepth].handleEvent(e);
 	}
-	if (_StateletStack.eventDepth != _StateletStack.size) {
+	if (_StateletStack.eventDepth == _StateletStack.size) {
 		_StateletStack.statelets[_StateletStack.size - 1].run();
 	}
 }

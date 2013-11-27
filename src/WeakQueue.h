@@ -22,7 +22,7 @@ void WeakQueueInit(WeakQueue *me, void *backingStore, int typeSize, int capacity
 void *WeakQueueReserve(WeakQueue *me);
 void WeakQueueCommit(WeakQueue *me);
 
-void *WeakQueueSnag(WeakQueue *me);
+void *WeakQueueAccess(WeakQueue *me);
 void WeakQueueDecommit(WeakQueue *me);
 
 #endif

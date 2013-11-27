@@ -36,7 +36,7 @@ void WeakQueueCommit(WeakQueue *me)
 	me->end = Cap(me->end + 1, me->capacity);
 }
 
-void *WeakQueueSnag(WeakQueue *me)
+void *WeakQueueAccess(WeakQueue *me)
 {
 	if (me->start == me->end) {
 		return NULL;

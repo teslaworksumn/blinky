@@ -8,31 +8,37 @@
 
 #include "Event.h"
 #include "Statelet.h"
+#include "WeakStack.h"
 #include <stddef.h>
 
-void InitStateletStack(Statelet base) {
-    _StateletStack.size = 1;
-    _StateletStack.statelets[0] = base;
+Statelet *StateletStackInit(StateletStack *me) {
+	me->stack = &me->_stack;
+	WeakStackInit(me->stack, me->statelets, sizeof(Statelet), STATELET_STACK_SIZE);
+	me->eventDepth = 0;
+
+	Statelet *s = WeakStackReserve(me->stack);
+	WeakStackCommit(me->stack);
+	return s;
 }
 
-void PushStatelet(Statelet s) {
-    _StateletStack.statelets[_StateletStack.size] = s;
-    _StateletStack.size += 1;
-}
-
-void TryStatelet(Event *e) {
-	for (_StateletStack.eventDepth = 0; _StateletStack.eventDepth < _StateletStack.size; _StateletStack.eventDepth += 1) {
-		_StateletStack.statelets[_StateletStack.eventDepth].handleEvent(e);
+void StateletStackHandle(StateletStack *me, Event *e) {
+	int stackHeight = me->stack->len;
+	for (me->eventDepth = 0; me->eventDepth < stackHeight; me->eventDepth += 1) {
+		Statelet *s = (Statelet *)WeakStackAccessIndex(me->stack, me->eventDepth);
+		s->handleEvent(e);
 	}
-	if (_StateletStack.eventDepth == _StateletStack.size) {
-		_StateletStack.statelets[_StateletStack.size - 1].run();
+	if (me->eventDepth == stackHeight) {
+		Statelet *s = (Statelet *)WeakStackAccess(me->stack);
+		s->run();
 	}
 }
 
-void Topple(EventCode code, Statelet s, Event *e) {
+void StateletStackTopple(StateletStack *me, EventCode code, Statelet s, Event *e) {
 	if (e->code == code) {
-		int i = _StateletStack.size - _StateletStack.eventDepth;
-		_StateletStack.statelets[i] = s;
-		_StateletStack.size = i + 1;
+		WeakStackDecommitN(me->stack, me->eventDepth);
+		Statelet *ns = (Statelet *)WeakStackReserve(me->stack);
+		ns->run = s.run;
+		ns->handleEvent = s.handleEvent;
+		WeakStackCommit(me->stack);
 	}
 }

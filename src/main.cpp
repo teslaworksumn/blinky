@@ -39,6 +39,9 @@ Event _Events[EVENT_STACK_SIZE];
 WeakQueue _EventQueue;
 WeakQueue *EventQueue = &_EventQueue;
 
+StateletStack _kStateletStack;
+StateletStack *kStateletStack = &_kStateletStack;
+
 static EventCode MapCharacterToEventCode(int c);
 static void Setup();
 
@@ -71,7 +74,7 @@ static PT_THREAD(Ribsy(struct pt *pt))
 
     while (1) {
     	PT_WAIT_UNTIL(pt, (e = (Event *)WeakQueueAccess(EventQueue)) != NULL);
-    	TryStatelet(e);
+    	StateletStackHandle(kStateletStack, e);
     	WeakQueueDecommit(EventQueue);
     }
 
@@ -107,7 +110,9 @@ static void Setup() {
 
 	// Stacks
 	WeakQueueInit(EventQueue, _Events, sizeof(Event), EVENT_STACK_SIZE);
-	InitStateletStack(Base);
+	Statelet *s = (Statelet *)StateletStackInit(kStateletStack);
+	s->run = Base.run;
+	s->handleEvent = Base.handleEvent;
 
 	// Initialize protothreads
     PT_INIT(&ptDriveEvents);

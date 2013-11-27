@@ -9,6 +9,8 @@
 #ifndef STATELET_H_
 #define STATELET_H_
 
+#include "WeakStack.h"
+
 #define STATELET_STACK_SIZE 32
 
 typedef struct _Statelet {
@@ -16,15 +18,15 @@ typedef struct _Statelet {
 	void (*handleEvent)(Event *);
 } Statelet;
 
-struct {
-    int size;
+typedef struct _StateletStack {
     Statelet statelets[STATELET_STACK_SIZE];
+    WeakStack _stack;
+    WeakStack *stack;
     int eventDepth;
-} _StateletStack;
+} StateletStack;
 
-void InitStateletStack(Statelet base);
-void PushStatelet(Statelet s);
-void TryStatelet(Event *e);
-void Topple(EventCode code, Statelet s, Event *e);
+Statelet *StateletStackInit(StateletStack *me);
+void StateletStackHandle(StateletStack *me, Event *e);
+void StateletStackTopple(StateletStack *me, EventCode code, Statelet s, Event *e);
 
 #endif

@@ -10,6 +10,8 @@
 #include "board.h"
 #include <stdio.h>
 
+extern StateletStack *kStateletStack;
+
 Statelet Base = { BaseRun, BaseHandleEvent };
 
 void BaseRun() {
@@ -17,6 +19,6 @@ void BaseRun() {
 }
 
 void BaseHandleEvent(Event *e) {
-	Topple(EventCodeLock, Locked, e);
-	Topple(EventCodeUnlock, Unlocked, e);
+	StateletStackTopple(kStateletStack, EventCodeLock, Locked, e);
+	StateletStackTopple(kStateletStack, EventCodeUnlock, Unlocked, e);
 }
